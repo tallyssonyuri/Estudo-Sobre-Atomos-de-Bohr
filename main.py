@@ -40,11 +40,11 @@ def calcular_propriedades_boehr(n):
 def calcular_energia_foton(n_inicial, n_final):
     E_inicial = -13.6 / n_inicial**2
     E_final = -13.6 / n_final**2
-    E_foton = E_final - E_inicial
-    λ_foton = h * c / (E_foton * 1.6e-19) * 1e9  # comprimento de onda em nm
-    f_foton = E_foton / (6.626e-15) * 1e-12  # frequência em THz
+    E_foton = E_final - E_inicial  # Energia do fóton absorvido (eV)
+    λ_foton = h * c / (E_foton * 1.6e-19) * 1e9  # Comprimento de onda (nm)
+    f_foton = c / (λ_foton * 1e-9)  # Frequência do fóton (Hz)
 
-    return E_foton, λ_foton, f_foton
+    return E_foton, λ_foton, f_foton * 1e-12  # Frequência em THz
 
 def calcular_energia_foton_emissao(n_inicial, n_final):
     E_inicial = -13.6 / n_inicial**2
