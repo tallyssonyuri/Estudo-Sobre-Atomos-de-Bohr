@@ -40,20 +40,20 @@ def calcular_propriedades_boehr(n):
 def calcular_energia_foton(n_inicial, n_final):
     E_inicial = -13.6 / n_inicial**2
     E_final = -13.6 / n_final**2
-    E_foton = E_final - E_inicial  # Energia do fóton absorvido (eV)
-    λ_foton = h * c / (E_foton * 1.6e-19) * 1e9  # Comprimento de onda (nm)
-    f_foton = c / (λ_foton * 1e-9)  # Frequência do fóton (Hz)
+    E_foton = E_final - E_inicial
+    λ_foton = h * c / (E_foton * 1.6e-19) * 1e9  # comprimento de onda em nm
+    f_foton = c / (λ_foton * 1e-9) #frequencia do foton (HZ)
 
-    return E_foton, λ_foton, f_foton * 1e-12  # Frequência em THz
+    return E_foton, λ_foton, f_foton * 1e-12 #Frequencia em THz
 
 def calcular_energia_foton_emissao(n_inicial, n_final):
     E_inicial = -13.6 / n_inicial**2
     E_final = -13.6 / n_final**2
     E_foton = E_inicial - E_final
     λ_foton = h * c / (E_foton * 1.6e-19) * 1e9  # comprimento de onda em nm
-    f_foton = E_foton / (6.626e-15) * 1e-12  # frequência em THz
+    f_foton = c / (λ_foton * 1e-9) #frequencia do foton (HZ)
 
-    return E_foton, λ_foton, f_foton
+    return E_foton, λ_foton, f_foton * 1e-12 # frequência em THz
 
 def calcular_n_inicial(λ_foton, n_final):
     E_foton = h * c / (λ_foton * 1e-9)  # energia do fóton em joules
@@ -168,7 +168,7 @@ def menu():
 
         elif escolha == "8":
             n_inicial = 1
-            λ_foton = 102.6396  # nm
+            λ_foton = 3082.69  # nm
             nf = calcular_n_final_foton_lam(n_inicial, λ_foton)
             print(f"\nNível final (nf) após absorver o fóton de comprimento de onda {λ_foton} nm: {nf:.2f}")
 
@@ -206,13 +206,13 @@ def menu():
             λ_min = h * c / E_max * 1e9  # comprimento de onda mínimo em nm
             λ_max = h * c / E_min * 1e9  # comprimento de onda máximo em nm
             
-            f_min = E_min / h * 1e-12  # frequência mínima em THz
-            f_max = E_max / h * 1e-12  # frequência máxima em THz
+            f_min = E_min / h  # frequência mínima em Hz
+            f_max = E_max / h  # frequência máxima em Hz
 
             print(f"\nParte 1: Menor comprimento do espectro visível (λ_min): {λ_min:.3f} nm")
             print(f"Parte 2: Maior comprimento do espectro visível (λ_max): {λ_max:.3f} nm")
-            print(f"Parte 3: Menor frequência do espectro visível (f_min): {f_min:.3f} × 10^14 Hz")
-            print(f"Parte 4: Maior frequência do espectro visível (f_max): {f_max:.3f} × 10^14 Hz")
+            print(f"Parte 3: Menor frequência do espectro visível (f_min): {f_min / 1e12:.3f} × 10^12 Hz")
+            print(f"Parte 4: Maior frequência do espectro visível (f_max): {f_max / 1e12:.3f} × 10^12 Hz")
 
         elif escolha == "14":
             print("Saindo do programa...")
