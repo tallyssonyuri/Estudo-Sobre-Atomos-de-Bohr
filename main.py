@@ -124,7 +124,7 @@ def calcular_energia_foton_luz_visivel(λ):
 
 def calcular_energia_foton_fre(f):
     E_joules = h * f  # energia em joules
-    E_eV = E_joules / 1.602e-19  # conversão para eV
+    E_eV = E_joules / eV_conversion  # conversão para eV
     return E_joules, E_eV
 
 def calcular_comprimento_fre(energia):
@@ -151,6 +151,19 @@ def calcular_n_inicial_abs_ex9(f_foton, n_final):
 
     # Cálculo do nível inicial (ni)
     ni = math.sqrt(-13.6 / E_inicial)
+    return ni
+
+def calcular_energia_foton_luz_visivel_ex11(λ):
+    E_joules = h * c / (λ * 1e-9)  # energia em joules
+    E_eV = E_joules / eV_conversion  # conversão para eV
+    return E_joules, E_eV
+
+def calcular_n_inicial_abs_lam_ex11(λ_foton, n_final):
+    E_foton = h * c / (λ_foton * 1e-9)  # energia do fóton em joules
+    E_final = -13.6 / n_final**2
+    E_inicial = E_final + E_foton / eV_conversion  # converte para eV
+    ni = math.sqrt(-13.6 / E_inicial)
+    
     return ni
 
 def menu():
@@ -217,22 +230,28 @@ def menu():
 
         elif  escolha == "9":
                 n_final = int(input("Digite o nível final nf: "))
-                f_foton = 434.4538  # frequência em THz
-                ni = calcular_n_inicial_abs_ex9(f_foton, n_final)
-                print(f"\nNível inicial (ni) ao absorver o fóton de frequência {f_foton} THz: {ni:.2f}")
+                λ_foton = float(input("Digite o comprimento de onda do fóton absorvido (nm): "))  # Novo input para o comprimento de onda
+                ni = calcular_n_inicial(λ_foton, n_final)  # Chama a função usada na opção 5
+                print(f"\nNível inicial (ni) ao absorver o fóton de comprimento de onda {λ_foton:.3f} nm: {ni:.2f}")
+
 
         elif escolha == "10":
-            n_final = int(input("Digite o nível final nf: "))
-            λ_foton = 434.4538  # nm
-            ni = calcular_n_inicial_abs_lam(λ_foton, n_final)
-            print(f"\nNível inicial (ni) ao absorver o fóton de comprimento de onda {λ_foton} nm: {ni:.2f}")
+                n_final = int(input("Digite o nível final nf: "))
+                λ_foton = 616.54  # nm (comprimento de onda fixo)
+                ni = calcular_n_inicial_abs_lam(λ_foton, n_final)
+                print(f"\nNível inicial (ni) ao absorver o fóton de comprimento de onda {λ_foton} nm: {ni:.2f}")
 
         elif escolha == "11":
-            λ_foton = 546  # nm
-            E_joules, E_eV = calcular_energia_foton_luz_visivel(λ_foton)
-            print(f"\nEnergia do fóton com comprimento de onda {λ_foton} nm:")
-            print(f"Resposta para parte 1: {E_joules:.3e} J")
-            print(f"Resposta para parte 2: {E_eV:.3e} eV")
+                λ_foton = 546  # nm
+                E_joules, E_eV = calcular_energia_foton_luz_visivel_ex11(λ_foton)
+                print(f"\nEnergia do fóton com comprimento de onda {λ_foton} nm:")
+                print(f"Resposta para parte 1: {E_joules:.3e} J")
+                print(f"Resposta para parte 2: {E_eV:.3e} eV")
+
+                # Verificando o nível inicial ni para n_final = 1
+                n_final = 1
+                ni = calcular_n_inicial_abs_lam_ex11(λ_foton, n_final)
+                print(f"Nível inicial (ni) ao absorver o fóton de comprimento de onda {λ_foton} nm: {ni:.2f}")
 
         elif escolha == "12":
             f_foton = 4.367e14  # Hz
