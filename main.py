@@ -1,8 +1,9 @@
 import math
 
 # Constantes
-h = 6.626e-34  # Constante de Planck em J·s
+h = 6.62607015e-34  # Constante de Planck em J·s
 c = 3.00e8     # Velocidade da luz no vácuo em m/s
+eV_conversion = 1.60218e-19  # Conversão de Joules para eV [J/eV]
 
 def intro():
     print("\nSeja bem-vindo ao Programa de Estudo do Modelo Atômico de Bohr!\n")
@@ -14,8 +15,8 @@ def exibeMenu():
     print("1. Explorar o modelo de Bohr para um nível n fornecido.\n")
     print("2. Calcular a energia do fóton absorvido, comprimento de onda e frequência para a transição entre níveis quânticos.\n")
     print("3. Calcular a energia do fóton emitido, comprimento de onda e frequência para a transição entre níveis quânticos.\n")
-    print("4. Determinar o nível inicial ni com base no nível final nf e no comprimento de onda do fóton emitido.\n")
-    print("5. Determinar o nível inicial ni com base no nível final nf e na frequência do fóton emitido.\n")
+    print("4. Determinar o nível inicial ni com base no nível final nf e na frequência do fóton emitido.\n")
+    print("5. Determinar o nível inicial ni com base no nível final nf e no comprimento de onda do fóton emitido.\n")
     print("6. Determinar o nível final nf com base no nível inicial ni e a frequência do fóton absorvido.\n")
     print("7. Determinar o nível final nf com base no nível inicial ni e o comprimento de onda do fóton absorvido.\n")
     print("8. Determinar o nível final nf com base no nível inicial ni e o comprimento de onda do fóton absorvido (caso n = 1).\n")
@@ -28,7 +29,7 @@ def exibeMenu():
 
 def calcular_propriedades_boehr(n):
     # Cálculos
-    r = n**2 * 5.29e-11  # raio da órbita em metros
+    r = n**2 * 5.29e-11 * 1e9 # raio da órbita em nanometros
     v = 2.187e6 / n      # velocidade do elétron em m/s
     K = 13.6 / n**2      # energia cinética em eV
     U = -27.2 / n**2     # energia potencial em eV
@@ -72,18 +73,39 @@ def calcular_n_final_foton_fre(n_inicial, f_foton):
     return nf
 
 def calcular_n_final_foton_lam(n_inicial, λ_foton):
-    E_foton = h * c / (λ_foton * 1e-9)  # energia do fóton em joules
-    E_inicial = -13.6 / n_inicial**2
-    E_final = E_inicial - E_foton / 1.6e-19  # converte para eV
-    nf = math.sqrt(-13.6 / E_final)
     
+    # Energia do fóton em Joules usando a frequência em Hz
+    E_foton = h *  λ_foton * 1e12  # converte THz para Hz
+    
+    # Energia inicial do nível
+    E_inicial = -13.6 / n_inicial**2  # em eV
+    
+    # Convertendo energia inicial para Joules
+    E_inicial_joules = E_inicial * 1.6e-19  # em Joules
+    
+    # Energia final
+    E_final_joules = E_inicial_joules + E_foton  # em Joules
+    E_final = E_final_joules / 1.6e-19  # converte para eV
+    
+    # Cálculo do nível final
+    nf = math.sqrt(-13.6 / E_final)
     return nf
 
 def calcular_n_inicial_abs(f_foton, n_final):
-    E_foton = h * f_foton * 1e12  # energia do fóton em joules
-    E_final = -13.6 / n_final**2
-    E_inicial = E_final - E_foton / 1.6e-19  # converte para eV
-    ni = (math.sqrt(-13.6 / E_inicial))
+    # Energia do fóton em joules
+    E_foton = h * f_foton * 1e12  # THz para Hz e energia em joules
+    
+    # Conversão da energia do fóton de joules para elétron-volts (eV)
+    E_foton_eV = E_foton / 1.60218e-19  # eV
+    
+    # Energia do nível final (em eV)
+    E_final = -13.6 / n_final**2  # Energia no nível final (eV)
+    
+    # Energia inicial (em eV) a partir da energia emitida
+    E_inicial = E_final + E_foton_eV  # A energia inicial é maior que a final
+    
+    # Calcular o número quântico inicial (n_i)
+    ni = math.sqrt(13.6 / abs(E_inicial))  # Usamos abs para evitar problemas numéricos
     
     return ni
 
@@ -111,6 +133,26 @@ def calcular_comprimento_fre(energia):
 def calcular_frequencia(energia):
     return energia / h  # frequência em Hz
 
+def calcular_n_inicial_abs_ex9(f_foton, n_final):
+    h = 6.62607015e-34  # constante de Planck em J.s
+    c = 3e8  # velocidade da luz em m/s
+    
+    # Converter frequência de THz para Hz
+    f_foton_hz = f_foton * 1e12  # THz para Hz
+
+    # Energia do fóton em Joules
+    E_foton = h * f_foton_hz
+
+    # Energia final em eV
+    E_final = -13.6 / n_final**2  # em eV
+
+    # Calcular a energia inicial
+    E_inicial = E_final - (E_foton / 1.6e-19)  # converte E_foton de Joules para eV
+
+    # Cálculo do nível inicial (ni)
+    ni = math.sqrt(-13.6 / E_inicial)
+    return ni
+
 def menu():
     while True:
         exibeMenu()
@@ -119,7 +161,7 @@ def menu():
         if escolha == "1":
             n = int(input("Digite o número quântico principal n: "))
             r, v, K, U, E, λ = calcular_propriedades_boehr(n)
-            print(f"\nRaio da órbita (r): {r:.3e} m")
+            print(f"\nRaio da órbita (r): {r:.3e} nm")
             print(f"Velocidade do elétron (v): {v:.3e} m/s")
             print(f"Energia cinética (K): {K:.3e} eV")
             print(f"Energia potencial (U): {U:.3e} eV")
@@ -143,15 +185,15 @@ def menu():
             print(f"Frequência do fóton emitido (f_foton): {f_foton:.3e} THz")
 
         elif escolha == "4":
-            n_inicial = int(input("Digite o nível inicial n: "))
-            λ_foton = float(input("Digite o comprimento de onda do fóton emitido (nm): "))
-            ni = calcular_n_inicial(λ_foton, n_inicial)
-            print(f"\nNível inicial (ni): {ni:.2f}")
-
-        elif escolha == "5":
             n_final = int(input("Digite o nível final n (estado mais baixo): "))
             f_foton = float(input("Digite a frequência do fóton emitido (THz): "))
             ni = calcular_n_inicial_abs(f_foton, n_final)
+            print(f"\nNível inicial (ni): {ni:.2f}")
+
+        elif escolha == "5":
+            n_inicial = int(input("Digite o nível inicial n: "))
+            λ_foton = float(input("Digite o comprimento de onda do fóton emitido (nm): "))
+            ni = calcular_n_inicial(λ_foton, n_inicial)
             print(f"\nNível inicial (ni): {ni:.2f}")
 
         elif escolha == "6":
@@ -167,20 +209,21 @@ def menu():
             print(f"\nNível final (nf): {nf:.2f}")
 
         elif escolha == "8":
-            n_inicial = 1
-            λ_foton = 3082.69  # nm
-            nf = calcular_n_final_foton_lam(n_inicial, λ_foton)
-            print(f"\nNível final (nf) após absorver o fóton de comprimento de onda {λ_foton} nm: {nf:.2f}")
+            n_inicial = float(input("Digite o nível inicial (n_inicial): "))
+            f_foton = float(input("Digite a frequência do fóton (em THz): "))
 
-        elif escolha == "9":
-            n_final = int(input("Digite o nível final nf: "))
-            f_foton = 616.54  # THz
-            ni = calcular_n_inicial_abs(f_foton, n_final)
-            print(f"\nNível inicial (ni) ao absorver o fóton de frequência {f_foton} THz: {ni:.2f}")
+            nf = calcular_n_final_foton_lam(n_inicial, f_foton)
+            print(f"\nNível final (nf) após absorver o fóton de frequência {f_foton} THz: {nf:.2f}")
+
+        elif  escolha == "9":
+                n_final = int(input("Digite o nível final nf: "))
+                f_foton = 434.4538  # frequência em THz
+                ni = calcular_n_inicial_abs_ex9(f_foton, n_final)
+                print(f"\nNível inicial (ni) ao absorver o fóton de frequência {f_foton} THz: {ni:.2f}")
 
         elif escolha == "10":
             n_final = int(input("Digite o nível final nf: "))
-            λ_foton = 102.6397  # nm
+            λ_foton = 434.4538  # nm
             ni = calcular_n_inicial_abs_lam(λ_foton, n_final)
             print(f"\nNível inicial (ni) ao absorver o fóton de comprimento de onda {λ_foton} nm: {ni:.2f}")
 
