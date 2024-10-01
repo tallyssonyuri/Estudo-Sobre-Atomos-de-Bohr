@@ -22,10 +22,11 @@ def exibeMenu():
     print("8. Determinar o nível final nf com base no nível inicial ni e o comprimento de onda do fóton absorvido (caso n = 1).\n")
     print("9. Determinar o nível inicial ni com base no nível final nf e a frequência do fóton absorvido.\n")
     print("10. Determinar o nível inicial ni com base no nível final nf e o comprimento de onda do fóton absorvido.\n")
-    print("11. Calcular a energia de um fóton de luz visível com comprimento de onda 546 nm.\n")
-    print("12. Calcular a energia de um fóton de luz visível com frequência 4.367 x 10^14 Hz.\n")
+    print("11. Calcular a energia de um fóton de luz visível com comprimento de onda de X nm.\n")
+    print("12. Calcular a energia de um fóton de luz visível com frequência de X Hz.\n")
     print("13. Calcular os limites do espectro visível (comprimento de onda e frequência).\n")
-    print("14. Sair\n")
+    print("14. Calcular qual é o menor comprimento do espectro visível\n")
+    print("15. Sair do programa")
 
 #ex1
 def calcular_propriedades_boehr(n):
